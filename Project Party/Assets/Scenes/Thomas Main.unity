@@ -180,11 +180,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accelSpeed: 12
-  accelDecaySpeed: 1.5
-  velocityClamp: {x: 12, y: 0, z: 12}
-  speed: 0
+  accelDecaySpeed: 4
+  velocityClamp: {x: 15, y: 0, z: 15}
+  reverseSpeedPercentage: 0.5
+  cSpeed: 0
   targetSpeed: 0
   steerSpeed: 120
+  lowVelocitySteerMultiplier: 1.35
+  speedMultiplier: 1
+  canMove: 1
   accelInput: 0
   steerInput: 0
 --- !u!65 &54211325
