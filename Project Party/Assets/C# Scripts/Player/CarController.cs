@@ -110,8 +110,7 @@ public class CarController : NetworkBehaviour
         {
             SyncCarPosition_ServerRPC(transform.position, transform.rotation.y);
         }
-    }
-
+    }    
 
 
     //Clients CANT call ClientRpc's so first, a ServerRpc (so the server calls) then a ClientRpc
