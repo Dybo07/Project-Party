@@ -212,7 +212,7 @@ public class LobbyRelay : NetworkBehaviour
                 _hostData.ConnectionData);
 
             NetworkManager.Singleton.StartHost();
-            NetworkManager.SceneManager.LoadScene("UNO", LoadSceneMode.Single);
+            NetworkManager.SceneManager.LoadScene("Thomas Main", LoadSceneMode.Single);
         }
         catch (LobbyServiceException e)
         {

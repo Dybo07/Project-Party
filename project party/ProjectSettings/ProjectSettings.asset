@@ -914,11 +914,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: d5cbf1bd-471e-4c41-9499-7144d4ce0930
+  cloudProjectId: 03fa52ce-de2b-4ee7-a617-eb94880180f8
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: project party
-  organizationId: dybo07
+  organizationId: fire-pixel8422
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CarController : NetworkBehaviour
+public class CarController_Velocity : NetworkBehaviour
 {
     private Rigidbody rb;
 
