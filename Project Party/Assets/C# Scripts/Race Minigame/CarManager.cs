@@ -18,6 +18,9 @@ public class CarManager : NetworkBehaviour
     public GameObject carPrefab;
     public Transform[] carStartPoints;
 
+    public int amountOfPlayersReady;
+    public double startTime;
+
 
 
     public CarController_Force[] cars;
@@ -25,10 +28,8 @@ public class CarManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            cars = new CarController_Force[carColors.Length];
-        }
+        cars = new CarController_Force[carColors.Length];
+
         RequestClientSetup_ServerRPC();
     }
 
@@ -37,12 +38,21 @@ public class CarManager : NetworkBehaviour
     private void RequestClientSetup_ServerRPC()
     {
         RequestClientSetup_ClientRPC();
+
+        amountOfPlayersReady += 1;
+        if (amountOfPlayersReady == NetworkManager.ConnectedClientsIds.Count && amountOfPlayersReady > 1)
+        {
+            StartGame_ClientRPC(NetworkManager.ServerTime.Time, startTime);
+        }
     }
+
     [ClientRpc(RequireOwnership = false)]
     private void RequestClientSetup_ClientRPC()
     {
         SpawnCar_ServerRPC(NetworkManager.LocalClientId);
     }
+
+    #region Spawn and Setup Car logic, prefab, and teamColor
 
     [ServerRpc(RequireOwnership = false)]
     private void SpawnCar_ServerRPC(ulong clientId)
@@ -53,10 +63,6 @@ public class CarManager : NetworkBehaviour
             GameObject carObj = Instantiate(carPrefab, carStartPoints[clientId].position, carStartPoints[clientId].rotation);
             carNetwork = carObj.GetComponent<NetworkObject>();
             carNetwork.SpawnWithOwnership(clientId, true);
-
-            CarController_Force targetCar = carObj.GetComponent<CarController_Force>();
-
-            cars[clientId] = targetCar;
         }
         else
         {
@@ -72,6 +78,8 @@ public class CarManager : NetworkBehaviour
         CarController_Force car = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId].GetComponent<CarController_Force>();
         car.TeamColorMaterialColor = carColors[clientId];
 
+        cars[clientId] = car;
+
         if (NetworkManager.LocalClientId == clientId)
         {
             foreach (Collider collider in car.GetComponentsInChildren<Collider>())
@@ -80,5 +88,22 @@ public class CarManager : NetworkBehaviour
             }
             car.GetComponent<Rigidbody>().isKinematic = false;
         }
+    }
+    #endregion
+
+
+    [ClientRpc(RequireOwnership = false)]
+    private void StartGame_ClientRPC(double serverTime, double startDelay)
+    {
+        double latency = (NetworkManager.ServerTime.Time - serverTime) / 2;
+
+        StartCoroutine(StartGameTimer(serverTime + latency + startDelay));
+    }
+
+    private IEnumerator StartGameTimer(double startTime)
+    {
+        yield return new WaitUntil(() => NetworkManager.ServerTime.Time >= startTime);
+
+        cars[NetworkManager.LocalClientId].gameStarted = true;
     }
 }

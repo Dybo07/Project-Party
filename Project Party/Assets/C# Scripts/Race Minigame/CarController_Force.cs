@@ -44,6 +44,7 @@ public class CarController_Force : NetworkBehaviour
 
     public float speedMultiplier = 1;
     public bool canMove;
+    public bool gameStarted;
 
 
     private bool IsMovingBackwards()
@@ -94,7 +95,7 @@ public class CarController_Force : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner)
+        if (!IsOwner || !gameStarted)
         {
             return;
         }
@@ -114,20 +115,19 @@ public class CarController_Force : NetworkBehaviour
             }
         }
 
-        float currentSpeed = Mathf.Clamp01(.1f + Mathf.Abs(rb.velocity.magnitude * 1.25f / velocityClamp.magnitude));
-
+        
         if (steerInput != 0)
         {
             float accelDir = accelInput == -1 ? -backwardsAccelMultiplier : 1;
 
-            rb.AddTorque(transform.up * currentSpeed * steerInput * accelDir * steerSpeed * Time.deltaTime, ForceMode.Acceleration);
-            rb.maxAngularVelocity = maxSteerSpeed;
+            rb.AddTorque(transform.up * steerInput * accelDir * steerSpeed * Mathf.Clamp(speedMultiplier * 0.75f, 1, int.MaxValue) * Time.deltaTime, ForceMode.Acceleration);
+            rb.maxAngularVelocity = maxSteerSpeed * Mathf.Clamp(speedMultiplier * 0.75f, 1, int.MaxValue);
         }
     }
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
+        if (!IsOwner || !gameStarted)
         {
             return;
         }
@@ -185,6 +185,7 @@ public class CarController_Force : NetworkBehaviour
 
             if (afterBurnTimeLeft <= 0)
             {
+                speedMultiplier = 1;
                 yield break;
             }
         }
