@@ -1,20 +1,9 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 
 public class CarManager : NetworkBehaviour
 {
-    public static CarManager Instance;
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-
     public GameObject carPrefab;
     public Transform[] carStartPoints;
 
