@@ -16,6 +16,7 @@ public class FallingTileManager : NetworkBehaviour
     public float startGameTime;
 
     public AnimationCurve tileSpawnRate;
+    public AnimationCurve tileAmount;
     public int tilesPlaced;
 
     public float tileSize;
@@ -24,14 +25,16 @@ public class FallingTileManager : NetworkBehaviour
     public List<float> tileSpawnClockTimes;
 
 
+
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
+            MiniGameManager.Instance.OnStartMinigameEvent.AddListener(() => StartCoroutine(CalculateNewTile_OnServer()));
             SetupGrid();
-            StartCoroutine(CalculateNewTile_OnServer());
         }
-        StartCoroutine(SpawnTileDelay());
+        StartCoroutine(SpawnTileTimer());
     }
     private void SetupGrid()
     {
@@ -51,15 +54,23 @@ public class FallingTileManager : NetworkBehaviour
 
     private IEnumerator CalculateNewTile_OnServer()
     {
+        print("called");
         yield return new WaitForSeconds(startGameTime);
 
+
         float tileDelay = 0;
+        int _tileAmount;
         while (true)
         {
             yield return new WaitForSeconds(tileDelay);
-            SyncTile_ClientRPC(NetworkManager.ServerTime.TimeAsFloat + 2, Random.Range(0, tileSpawnPositions.Count));
+
+            for (int i = 0; i < 2; i++)
+            {
+                SyncTile_ClientRPC(NetworkManager.ServerTime.TimeAsFloat + 2, Random.Range(0, tileSpawnPositions.Count));
+            }
 
             tileDelay = tileSpawnRate.Evaluate(tilesPlaced);
+            _tileAmount = (int)tileAmount.Evaluate(tilesPlaced);
             tilesPlaced += 1;
             print(tileDelay);
         }
@@ -71,7 +82,7 @@ public class FallingTileManager : NetworkBehaviour
         tileSpawnClockTimes.Add(timeToActivateAt);
         tileToSpawnIds.Add(spawnPointId);
     }
-    private IEnumerator SpawnTileDelay()
+    private IEnumerator SpawnTileTimer()
     {
         while (true)
         {

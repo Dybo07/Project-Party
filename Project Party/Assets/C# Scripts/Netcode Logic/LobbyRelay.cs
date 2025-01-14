@@ -212,7 +212,7 @@ public class LobbyRelay : NetworkBehaviour
                 _hostData.ConnectionData);
 
             NetworkManager.Singleton.StartHost();
-            NetworkManager.SceneManager.LoadScene("Falling Tiles Minigame", LoadSceneMode.Single);
+            NetworkManager.SceneManager.LoadScene("Racing Minigame", LoadSceneMode.Single);
         }
         catch (LobbyServiceException e)
         {

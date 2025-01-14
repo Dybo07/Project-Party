@@ -539,7 +539,7 @@ GameObject:
   - component: {fileID: 1079920499}
   - component: {fileID: 1079920500}
   m_Layer: 0
-  m_Name: Game Manager
+  m_Name: Tile Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -581,7 +581,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 9062361437436434128, guid: 100536eccbe047941b45430916d78150,
     type: 3}
   gridCenter: {fileID: 1023459401}
-  gridSize: {x: 12, y: 12}
+  gridSize: {x: 16, y: 16}
   tileSpawnPositions: []
   startGameTime: 3
   tileSpawnRate:
